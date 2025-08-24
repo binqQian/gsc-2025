@@ -1,8 +1,11 @@
 # 忽略所有的日志文件
 *.log
+*.br
 
 # 忽略编译产生的文件夹
 /bin/
 /build/
 
 /.vscode/
+
+/scripts/

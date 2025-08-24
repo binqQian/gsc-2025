@@ -4,6 +4,7 @@
 #include "xxhash/xxh3.h"
 #include <fstream>
 
+// test
 uint64_t calculateFileHash(const std::string& filePath) {
     std::ifstream file(filePath, std::ios::binary);
     if (!file.is_open()) {
