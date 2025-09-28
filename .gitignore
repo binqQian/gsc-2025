@@ -9,3 +9,6 @@
 /.vscode/
 
 /scripts/
+/data/
+/logs/
+/tmp/
