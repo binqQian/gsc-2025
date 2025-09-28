@@ -1,8 +1,3 @@
-# Copyright (C) BGI-Reasearch - All Rights Reserved
-# Unauthorized copying of this file, via any medium is strictly prohibited
-# Proprietary and confidential
-# Written by STomics development team <P_stomics_dev@genomics.cn>, May 2017
-#
 cmake_minimum_required (VERSION 3.8)
 
 # 如果支持，请为 MSVC 编译器启用热重载。
@@ -14,39 +9,51 @@ endif()
 project (gsc)
 
 set(CMAKE_CXX_STANDARD 17)
-# exports compile_commands.json - used by clang tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# 定义spdlog编译库宏
+add_definitions(-DSPDLOG_COMPILED_LIB)
 
 if(UNIX)
     message("current platform: Linux ")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare -g -O0 -mavx2 -fopenmp -fno-omit-frame-pointer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-sign-compare -g -O3 -mavx2 -fopenmp -fno-omit-frame-pointer")
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 else()
     message("current platform: Windows ")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O3 -mavx2 -fopenmp")
 endif()
 
-
+# 修改源文件路径（根据你的实际情况调整）
 set(MAIN_SOURCE_FILES
     src/main.cpp
 )
 
 if(UNIX)
+    # 添加头文件路径
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../include")
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include") # 添加 Brotli 头文件路径
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")  # spdlog头文件在这里
+
+    # 添加库文件路径
     link_directories("${CMAKE_CURRENT_SOURCE_DIR}/../lib")
-    link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib") # 添加 Brotli 库路径
+    link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")  # libspdlog.a在这里
 
     add_library(objlib OBJECT ${MAIN_SOURCE_FILES})
     add_executable(gsc $<TARGET_OBJECTS:objlib>)
 
-    #target_link_libraries(gsc z pthread dl hts bsc)
-    target_link_libraries(gsc z pthread dl bsc brotlicommon brotlienc brotlidec)
-else()
-    # include_directories("classify"  )
-    # link_directories("classify" "zlib")
-    # add_executable (seqarc ${MAIN_SOURCE_FILES})
-    # target_link_libraries(seqarc zlibwapi)
-endif()
+    # 链接库 - 添加spdlog
+    target_link_libraries(gsc spdlog z pthread dl bsc brotlicommon brotlienc brotlidec tbb tbbmalloc)
 
+    # 设置运行时库路径
+    set_target_properties(gsc PROPERTIES
+        INSTALL_RPATH "${CMAKE_CURRENT_SOURCE_DIR}/lib"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+
+    set_target_properties(gsc PROPERTIES
+        INSTALL_RPATH "$ORIGIN/lib"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+
+else()
+    # Windows平台配置
+endif()

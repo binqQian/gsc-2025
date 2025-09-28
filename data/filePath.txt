@@ -3,12 +3,12 @@
         1000GPip3_chr1_tiny: ./data/vcf/vcf_58_Samples_1246_Variantcds.vcf.gz
         1000GPip3_chr1_small: ./data/vcf/vcf_2504_Samples_100k_Variants.vcf.gz
     real data:
-        CKB_demo_data: /data05/quanbin_data/GenomicData/VCF_data/CKB_VCF_sample/output.vcf.gz
+        CKB_demo_data(15G): /data05/quanbin_data/GenomicData/VCF_data/CKB_VCF_sample/output.vcf.gz
         1000GPip3_chr1: /data05/quanbin_data/GenomicData/VCF_data/1000GPip3/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
-
+        https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20190425_NYGC_GATK/
 ===== gVCF =====
     demo data: 
         tiny: ./data/gvcf/HG002_first10k.gvcf.gz
         small: ./data/gvcf/HG002_first20m.gvcf.gz
     real data: 
-        CKB_demo_data: /data05/quanbin_data/GenomicData/VCF_data/HG002.gvcf.gz
+        CKB_demo_data（11G）: /data05/quanbin_data/GenomicData/VCF_data/HG002.gvcf.gz
