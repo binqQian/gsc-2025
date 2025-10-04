@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.15)
 
 # 如果支持，请为 MSVC 编译器启用热重载。
 if (POLICY CMP0141)
@@ -31,16 +31,15 @@ set(MAIN_SOURCE_FILES
 if(UNIX)
     # 添加头文件路径
     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/../include")
-    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")  # spdlog头文件在这里
+    include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
     # 添加库文件路径
     link_directories("${CMAKE_CURRENT_SOURCE_DIR}/../lib")
-    link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")  # libspdlog.a在这里
+    link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
     add_library(objlib OBJECT ${MAIN_SOURCE_FILES})
     add_executable(gsc $<TARGET_OBJECTS:objlib>)
 
-    # 链接库 - 添加spdlog
     target_link_libraries(gsc spdlog z pthread dl bsc brotlicommon brotlienc brotlidec tbb tbbmalloc)
 
     # 设置运行时库路径

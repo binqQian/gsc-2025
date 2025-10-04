@@ -2,11 +2,24 @@
 Extension of gsc compression tool.
 
 ```
-# 项目依赖：
-    - brotli
+# 新建构建目录（推荐 out-of-source build）
+mkdir build
+cd build
+
+# 生成构建系统文件
+cmake ..
+
+# 编译
+make
+
+```
+
+```
+# 项目依赖(版本号)：
+    - brotli   --
     - zstd -- 提高压缩速度，但降低压缩率
-    - xxhash
-    - oneTBB
+    - xxhash  -- 
+    - oneTBB  --
 ```
 
 ```
@@ -33,3 +46,4 @@ Extension of gsc compression tool.
 - [ ] 检索速率、检索来增加随机访问 
 
 ---
+- GPU 处理 比特矩阵
