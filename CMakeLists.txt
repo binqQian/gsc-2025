@@ -56,3 +56,88 @@ if(UNIX)
 else()
     # Windows平台配置
 endif()
+
+# ==================== Google Test 集成 ====================
+
+# 添加选项来控制是否编译测试（可选）
+option(BUILD_TESTS "Build the tests" ON)
+
+if(BUILD_TESTS)
+    message("Building tests enabled")
+    
+    # 引入 FetchContent 模块
+    include(FetchContent)
+    
+    # 设置 FetchContent 使用全局缓存目录
+    set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/.cache" CACHE PATH "FetchContent base directory")
+    
+    # 下载并配置 Google Test
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
+    )
+    
+    # 在 Windows 上防止覆盖父项目的编译器/链接器设置
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    
+    # 使 googletest 可用
+    FetchContent_MakeAvailable(googletest)
+    
+    # 启用测试
+    enable_testing()
+    
+    # 如果你有需要测试的库代码，将其分离出来
+    # 例如：将 main.cpp 以外的源文件编译成库
+    set(LIB_SOURCE_FILES
+        # src/your_lib_file1.cpp
+        # src/your_lib_file2.cpp
+        # 添加你要测试的源文件（不包括 main.cpp）
+    )
+    
+    # 如果有库代码，创建一个库
+    if(LIB_SOURCE_FILES)
+        add_library(gsc_lib ${LIB_SOURCE_FILES})
+        target_include_directories(gsc_lib PUBLIC 
+            "${CMAKE_CURRENT_SOURCE_DIR}/../include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        )
+        target_link_libraries(gsc_lib spdlog z pthread dl bsc brotlicommon brotlienc brotlidec tbb tbbmalloc)
+        
+        # 让主程序链接这个库
+        target_link_libraries(gsc gsc_lib)
+    endif()
+    
+    # 创建测试可执行文件
+    file(GLOB TEST_SOURCES "tests/*.cpp")
+    
+    if(TEST_SOURCES)
+        add_executable(gsc_tests ${TEST_SOURCES})
+        
+        # 链接 Google Test 和你的库
+        target_link_libraries(gsc_tests 
+            gtest_main
+            gmock_main
+        )
+        
+        # 如果有 gsc_lib，也链接它
+        if(LIB_SOURCE_FILES)
+            target_link_libraries(gsc_tests gsc_lib)
+        endif()
+        
+        # 如果测试需要访问相同的头文件
+        target_include_directories(gsc_tests PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/../include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        )
+        
+        # 添加测试到 CTest
+        include(GoogleTest)
+        gtest_discover_tests(gsc_tests)
+        
+        message("Test executable: gsc_tests")
+    else()
+        message(WARNING "No test files found in tests/ directory")
+    endif()
+    
+endif()
