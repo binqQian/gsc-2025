@@ -7,8 +7,10 @@
 /build/
 
 /.vscode/
+/.cache/
 
 /scripts/
 /data/
 /logs/
 /tmp/
+
