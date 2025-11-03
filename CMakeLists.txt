@@ -90,9 +90,8 @@ if(BUILD_TESTS)
     # 如果你有需要测试的库代码，将其分离出来
     # 例如：将 main.cpp 以外的源文件编译成库
     set(LIB_SOURCE_FILES
-        # src/your_lib_file1.cpp
-        # src/your_lib_file2.cpp
-        # 添加你要测试的源文件（不包括 main.cpp）
+        src/mmap.cpp
+        # 如果将来有其它要测试的源文件，可以在这里添加（不包括 main.cpp）
     )
     
     # 如果有库代码，创建一个库
@@ -131,11 +130,14 @@ if(BUILD_TESTS)
             "${CMAKE_CURRENT_SOURCE_DIR}/include"
         )
         
-        # 添加测试到 CTest
-        include(GoogleTest)
-        gtest_discover_tests(gsc_tests)
-        
-        message("Test executable: gsc_tests")
+    # 添加测试到 CTest
+    # 使用 add_test 而不是 gtest_discover_tests 以避免在发现阶段运行测试可执行文件
+    #（当前的测试可执行文件在运行时会访问项目根目录下的 input.txt）
+    add_test(NAME gsc_tests COMMAND gsc_tests)
+    # 确保测试在源码根目录下运行，这样相对路径 input.txt 能被找到
+    set_tests_properties(gsc_tests PROPERTIES WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
+    message("Test executable: gsc_tests")
     else()
         message(WARNING "No test files found in tests/ directory")
     endif()
