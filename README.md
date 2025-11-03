@@ -20,6 +20,7 @@ make
     - zstd -- 提高压缩速度，但降低压缩率
     - xxhash  -- 
     - oneTBB  --
+    - mio  -- mmap工具
 ```
 
 ```
