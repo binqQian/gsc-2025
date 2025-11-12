@@ -9,7 +9,7 @@
 /.vscode/
 /.cache/
 
-/scripts/
+# /scripts/
 /data/
 /logs/
 /tmp/
