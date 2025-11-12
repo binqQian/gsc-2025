@@ -16,10 +16,10 @@ make
 
 ```
 # 项目依赖(版本号)：
-    - brotli   --
+    - brotli   --  后端编码器
     - zstd -- 提高压缩速度，但降低压缩率
-    - xxhash  -- 
-    - oneTBB  --
+    - xxhash  -- 哈希校验
+    - oneTBB  --  cpu并行库
     - mio  -- mmap工具
 ```
 
@@ -50,3 +50,4 @@ make
 ---
 - 
 - GPU 加速处理 比特矩阵：需要做实验验证
+- 已知矩阵长度固定，用bitset来存
